@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CatCope</string>
+    <string name="latitude_label">Latitude:</string>
+    <string name="longitude_label">Longitude:</string>
+    <string name="solar_event_label">Next Solar Event:</string>
+    <string name="seekbar_bar_label">Refresh Time (in minutes)</string>
+</resources>
