@@ -38,21 +38,7 @@ class CatCopeRepositoryImpl private constructor(
         sunriseSunsetNetworkDataSource.fetchSolarEvents(latitude, longitude)
 
         return sunriseSunsetNetworkDataSource.downloadedSolarEvents
-
-        /*sunriseSunsetNetworkDataSource.downloadedSolarEvents.observe(this, Observer {
-            Log.d("MainActivity", it.results.toString())
-        })*/
     }
-
-    /*suspend fun fetchSolarEvents(context: Context): SolarEventsEntry{
-        val apiService = SunriseSunsetApiService(ConnectivityInterceptorImpl(context))
-        val sunriseSunsetNetworkDataSource = SunriseSunsetNetworkDataSourceImpl(apiService)
-
-        sunriseSunsetNetworkDataSource.fetchSolarEvents().observe(this, Observer {
-            Log.d("MainActivity", it.results.toString())
-            api_response_value.text = it.results.toString()
-        })
-    }*/
 
     /*override suspend fun getSolarEvents(): LiveData<SunriseSunsetResponse> {
         *//*val sunriseSunsetApiService = SunriseSunsetApiService(ConnectivityInterceptorImpl(context = MainActivity))

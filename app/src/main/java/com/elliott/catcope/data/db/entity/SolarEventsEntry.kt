@@ -1,7 +1,13 @@
 package com.elliott.catcope.data.db.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+const val CURRENT_SOLAR_EVENT_ID = 0
+
+
+@Entity (tableName = "current_solar_events")
 data class SolarEventsEntry(
     @SerializedName("astronomical_twilight_begin")
     val astronomicalTwilightBegin: String,
@@ -21,5 +27,7 @@ data class SolarEventsEntry(
     val solarNoon: String,
     val sunrise: String,
     val sunset: String
-
-)
+) {
+    @PrimaryKey(autoGenerate = false)
+    var id: Int = CURRENT_SOLAR_EVENT_ID
+}
