@@ -15,20 +15,13 @@ interface SunriseSunsetApiService {
 
     @GET("json")
     fun getSolarEventTimes(
-        @Query("lat") latitude: Float,
-        @Query("lng") longitude: Float
+        @Query("lat") latitude: Double,
+        @Query("lng") longitude: Double
     ): Deferred<SunriseSunsetResponse>
 
     companion object {
-        operator fun invoke(
-            connectivityInterceptor: ConnectivityInterceptor
-        ): SunriseSunsetApiService {
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(connectivityInterceptor)
-                .build()
-
+        operator fun invoke(): SunriseSunsetApiService {
             return Retrofit.Builder()
-                .client(okHttpClient)
                 .baseUrl("https://api.sunrise-sunset.org/")
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())

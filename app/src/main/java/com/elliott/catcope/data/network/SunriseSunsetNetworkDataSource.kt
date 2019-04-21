@@ -8,7 +8,7 @@ interface SunriseSunsetNetworkDataSource {
     val downloadedSolarEvents : LiveData<SunriseSunsetResponse>
 
     suspend fun fetchSolarEvents(
-        latitude: Float,
-        longitude: Float
+        latitude: Double,
+        longitude: Double
     )
 }

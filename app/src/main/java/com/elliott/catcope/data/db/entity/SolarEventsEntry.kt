@@ -1,7 +1,5 @@
 package com.elliott.catcope.data.db.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class SolarEventsEntry(
@@ -23,4 +21,5 @@ data class SolarEventsEntry(
     val solarNoon: String,
     val sunrise: String,
     val sunset: String
+
 )

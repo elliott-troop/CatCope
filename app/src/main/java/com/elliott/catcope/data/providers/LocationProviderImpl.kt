@@ -11,8 +11,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 class LocationProviderImpl(
-    private var fusedLocationProviderClient: FusedLocationProviderClient,
-    context: Context
+    private var fusedLocationProviderClient: FusedLocationProviderClient
 ) : LocationProvider {
 
     private val _latitude = MutableLiveData<Float>()
@@ -33,8 +32,6 @@ class LocationProviderImpl(
                     if (location != null) {
                         _latitude.postValue(location.latitude as Float)
                         _longitude.postValue(location.longitude as Float)
-                        //latitude = location.latitude
-                        //longitude = location.longitude
 
                     } else {
                         Log.e("MainActivity", "Location is null")
