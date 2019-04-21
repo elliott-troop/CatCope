@@ -59,6 +59,10 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
+    // Kodein
+    implementation "org.kodein.di:kodein-di-generic-jvm:$kodein_version"
+    implementation "org.kodein.di:kodein-di-framework-android-x:$kodein_version"
+
     //Better dateTime-time support even on older Android devices
     implementation "com.jakewharton.threetenabp:threetenabp:1.1.0"
 
