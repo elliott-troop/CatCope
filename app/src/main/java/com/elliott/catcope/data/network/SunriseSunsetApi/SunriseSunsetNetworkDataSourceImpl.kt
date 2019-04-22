@@ -1,9 +1,8 @@
-package com.elliott.catcope.data.network
+package com.elliott.catcope.data.network.SunriseSunsetApi
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.elliott.catcope.data.db.entity.SolarEventsEntry
 import com.elliott.catcope.data.response.SunriseSunsetResponse
 import com.elliott.catcope.internal.NoConnectivityException
 
@@ -25,7 +24,5 @@ class SunriseSunsetNetworkDataSourceImpl(private val sunriseSunsetApiService: Su
             Log.e("Connectivity", "No internet connection", e)
         }
     }
-
-    
 
 }

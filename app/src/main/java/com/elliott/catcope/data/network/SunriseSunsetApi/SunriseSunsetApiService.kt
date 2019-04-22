@@ -1,5 +1,6 @@
-package com.elliott.catcope.data.network
+package com.elliott.catcope.data.network.SunriseSunsetApi
 
+import com.elliott.catcope.data.network.ConnectivityInterceptor
 import com.elliott.catcope.data.response.SunriseSunsetResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
@@ -20,8 +21,15 @@ interface SunriseSunsetApiService {
     ): Deferred<SunriseSunsetResponse>
 
     companion object {
-        operator fun invoke(): SunriseSunsetApiService {
+        operator fun invoke(
+            connectivityInterceptor: ConnectivityInterceptor
+        ): SunriseSunsetApiService {
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(connectivityInterceptor)
+                .build()
+
             return Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl("https://api.sunrise-sunset.org/")
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())

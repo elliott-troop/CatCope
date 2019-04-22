@@ -4,58 +4,52 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.elliott.catcope.R
-import com.elliott.catcope.data.network.ConnectivityInterceptorImpl
-import com.elliott.catcope.data.network.SunriseSunsetApiService
-import com.elliott.catcope.data.network.SunriseSunsetNetworkDataSourceImpl
-import com.elliott.catcope.utilities.InjectorUtils
+import com.elliott.catcope.ui.base.ScopedActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
 
 private const val MY_PERMISSION_ACCESS_COARSE_LOCATION = 1
 
-// class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+class MainActivity : ScopedActivity(), GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener, KodeinAware {
 
-class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
-
-    override fun onLocationChanged(p0: Location) {
-        Log.e("MainActivity", "Latitude from onLocationChanged(): " + p0.latitude)
-        Log.e("MainActivity", "Longitude from onLocationChanged(): " + p0.longitude)
-    }
+    override val kodein by closestKodein()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var googleApiClient: GoogleApiClient
+
     private lateinit var viewModel: CatCopeViewModel
-    private lateinit var viewModelFactory: CatCopeViewModelFactory
+    private val viewModelFactory: CatCopeViewModelFactory by instance()
+
     private var latitude: Double = 36.7201600
     private var longitude: Double = -4.4203400
+
+    //remove later
     private var i: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModelFactory = InjectorUtils.provideCatCopeViewModelFactory(this)
+        //viewModelFactory = InjectorUtils.provideCatCopeViewModelFactory(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CatCopeViewModel::class.java)
 
-        googleApiClient = GoogleApiClient.Builder(this)
+        /*googleApiClient = GoogleApiClient.Builder(this)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
             .addApi(LocationServices.API)
@@ -67,48 +61,54 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
         if (hasLocationPermission()) {
             getDeviceCurrentLocation()
-            initializeUi()
+            bindUI()
         } else
             Log.e("MainActivity", "1 hasLocationPermission() failed and went to else " + i++)
-            requestLocationPermission()
+            requestLocationPermission()*/
 
-        val apiService = SunriseSunsetApiService()
-        val sunriseSunsetNetworkDataSource = SunriseSunsetNetworkDataSourceImpl(apiService)
-        sunriseSunsetNetworkDataSource.downloadedSolarEvents.observe(this, Observer {
-            next_solar_event.text = it.solarEventsEntry.sunset.toString()
-        })
-
-        GlobalScope.launch {
-            sunriseSunsetNetworkDataSource.fetchSolarEvents(latitude, longitude)
-        }
+        bindUI()
 
 
     }
 
-    private fun initializeUi() {
-        Log.e("MainActivity", "2 initializeUi() just called " + i++)
-        /*runBlocking {
-            viewModel.getSolarEvents(latitude!!, longitude!!).observe(
-                this@MainActivity,
-                Observer {
-                    next_solar_event.text = it.solarEventsEntry.sunrise
-                }
-            )
-        }*/
+    private fun bindUI() = launch{
+        latitude_value.text = latitude.toString()
+        longitude_value.text = longitude.toString()
+
+        val solarEvent = viewModel.getSolarEvent.await()
+        solarEvent.observe(this@MainActivity, Observer {
+            if(it == null) {
+                return@Observer
+            }
+
+            next_solar_event.text = it.sunset
+        })
+
+        val petImage = viewModel.getPetUrl.await()
+        petImage.observe(this@MainActivity, Observer {
+            if(it == null) {
+                return@Observer
+            }
+
+            Glide.with(this@MainActivity)
+                .load(it.imageOfDogUrl)
+                .into(pet_image_view)
+        })
+
     }
 
     override fun onStart() {
         Log.e("MainActivity", "3 onStart() just called " + i++)
         super.onStart();
-        googleApiClient.connect()
+//        googleApiClient.connect()
     }
 
     override fun onStop() {
         Log.e("MainActivity", "4 onStop() just called " + i++)
         super.onStop();
-        if (googleApiClient.isConnected()) {
+        /*if (googleApiClient.isConnected()) {
             googleApiClient.disconnect();
-        }
+        }*/
     }
 
     private fun hasLocationPermission(): Boolean {
@@ -128,18 +128,18 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         )
         if(hasLocationPermission()) {
             getDeviceCurrentLocation()
-            initializeUi()
+            //bindUI()
         }
     }
 
     override fun onConnected(p0: Bundle?) {
-        Log.e("MainActivity", "7 onConnected() just called " + i++)
+        /*Log.e("MainActivity", "7 onConnected() just called " + i++)
         if (!hasLocationPermission()) {
             Log.e("MainActivity", "8 !hasLocationPermission() just called " + i++)
             requestLocationPermission()
         } else {
             getDeviceCurrentLocation()
-        }
+        }*/
     }
 
     @SuppressLint("MissingPermission")
