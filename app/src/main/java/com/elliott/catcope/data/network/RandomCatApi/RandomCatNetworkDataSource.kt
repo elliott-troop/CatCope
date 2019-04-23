@@ -1,4 +1,4 @@
-package com.elliott.catcope.data.network.cat_api
+package com.elliott.catcope.data.network.RandomCatApi
 
 import androidx.lifecycle.LiveData
 import com.elliott.catcope.data.response.RandomCatResponse

@@ -1,9 +1,8 @@
-package com.elliott.catcope.data.network.cat_api
+package com.elliott.catcope.data.network.RandomCatApi
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.elliott.catcope.data.network.cat_api.RandomCatApiService
 import com.elliott.catcope.data.response.RandomCatResponse
 import com.elliott.catcope.internal.NoConnectivityException
 

@@ -11,6 +11,7 @@ class RandomDogNetworkDataSourceImpl(
 ) : RandomDogNetworkDataSource {
 
     private val _downloadedDogUrl = MutableLiveData<RandomDogResponse>()
+    override var dogUrl: String = ""
 
     override val downloadedDogUrl: LiveData<RandomDogResponse>
         get() = _downloadedDogUrl
@@ -21,6 +22,7 @@ class RandomDogNetworkDataSourceImpl(
                 .getDogImageUrl()
                 .await()
             _downloadedDogUrl.postValue(fetchRandomDogUrl)
+            dogUrl = fetchRandomDogUrl.imageOfDogUrl
         } catch (e: NoConnectivityException) {
             Log.e("Connectivity", "No internet connection", e)
         }

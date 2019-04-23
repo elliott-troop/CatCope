@@ -3,29 +3,23 @@ package com.elliott.catcope.ui
 import androidx.lifecycle.ViewModel
 import com.elliott.catcope.data.repository.CatCopeRepository
 import com.elliott.catcope.internal.lazyDeferred
+import kotlinx.coroutines.Deferred
 
 class CatCopeViewModel(
     private val catCopeRepository: CatCopeRepository
 ) : ViewModel() {
 
-//    private val refreshTime = //get from seekbar
-
-
-    val getSolarEvent by lazyDeferred() {
+    val getSolarEvent by lazyDeferred {
         catCopeRepository.getSolarEvents()
     }
 
-    val getPetUrl by lazyDeferred() {
-        catCopeRepository.getPetUrl()
+    val getDogUrl by lazyDeferred {
+        catCopeRepository.getDogUrl()
     }
 
-    /*fun getLatitude() = catCopeRepository.getLatitude()
-    fun getLongitude() = catCopeRepository.getLongitude()*/
+    val getCatUrl by lazyDeferred {
+        catCopeRepository.getCatUrl()
+    }
 
-    //fun getDeviceCurrentLocation(context: Context) = catCopeRepository.getDeviceCurrentLocation(context)
-
-
-    //suspend fun getSolarEvents(latitude: Double, longitude: Double) = catCopeRepository.getSolarEvents(latitude, longitude)
-
-    //val sunsetApiService = SunriseSunsetApiService(ConnectivityInterceptorImpl())
+    suspend fun getSolarTimes(latitude: Double, longitude: Double) = catCopeRepository.getSolarTimes(latitude, longitude)
 }

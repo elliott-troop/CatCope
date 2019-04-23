@@ -1,8 +1,7 @@
-package com.elliott.catcope.data.network.cat_api
+package com.elliott.catcope.data.network.RandomCatApi
 
 import com.elliott.catcope.data.network.ConnectivityInterceptor
 import com.elliott.catcope.data.response.RandomCatResponse
-import com.google.gson.annotations.SerializedName
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient

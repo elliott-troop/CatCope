@@ -1,6 +1,7 @@
 package com.elliott.catcope
 
 import android.app.Application
+import android.content.Context
 import com.elliott.catcope.data.db.SunriseSunsetDatabase
 import com.elliott.catcope.data.network.*
 import com.elliott.catcope.data.network.RandomDogApi.RandomDogApiService
@@ -9,12 +10,13 @@ import com.elliott.catcope.data.network.RandomDogApi.RandomDogNetworkDataSourceI
 import com.elliott.catcope.data.network.SunriseSunsetApi.SunriseSunsetApiService
 import com.elliott.catcope.data.network.SunriseSunsetApi.SunriseSunsetNetworkDataSource
 import com.elliott.catcope.data.network.SunriseSunsetApi.SunriseSunsetNetworkDataSourceImpl
-import com.elliott.catcope.data.network.cat_api.RandomCatApiService
-import com.elliott.catcope.data.network.cat_api.RandomCatNetworkDataSource
-import com.elliott.catcope.data.network.cat_api.RandomCatNetworkDataSourceImpl
+import com.elliott.catcope.data.network.RandomCatApi.RandomCatApiService
+import com.elliott.catcope.data.network.RandomCatApi.RandomCatNetworkDataSource
+import com.elliott.catcope.data.network.RandomCatApi.RandomCatNetworkDataSourceImpl
 import com.elliott.catcope.data.repository.CatCopeRepository
 import com.elliott.catcope.data.repository.CatCopeRepositoryImpl
 import com.elliott.catcope.ui.CatCopeViewModelFactory
+import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -54,6 +56,7 @@ class CatCopeApplication : Application(), KodeinAware {
             )
         }
         bind() from provider { CatCopeViewModelFactory(instance()) }
+        bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
     }
 
     override fun onCreate() {

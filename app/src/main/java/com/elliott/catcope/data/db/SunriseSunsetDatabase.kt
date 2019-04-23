@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.elliott.catcope.data.db.entity.SolarEventsEntry
+import com.elliott.catcope.data.response.RandomCatResponse
+import com.elliott.catcope.data.response.RandomDogResponse
 
 @Database(
     entities = [SolarEventsEntry::class],
@@ -24,6 +26,7 @@ abstract class SunriseSunsetDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
                     SunriseSunsetDatabase::class.java, "solar_events.db")
+                    .fallbackToDestructiveMigration()
                     .build()
     }
 }

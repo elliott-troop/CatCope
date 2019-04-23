@@ -4,4 +4,6 @@
     <string name="longitude_label">Longitude:</string>
     <string name="solar_event_label">Next Solar Event:</string>
     <string name="seekbar_bar_label">Refresh Time (in minutes)</string>
+    <string name="sunrise_label">Sunrise:</string>
+    <string name="sunset_label">Sunset:</string>
 </resources>

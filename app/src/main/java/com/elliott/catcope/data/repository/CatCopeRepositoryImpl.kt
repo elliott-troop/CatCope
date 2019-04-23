@@ -1,11 +1,13 @@
 package com.elliott.catcope.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.elliott.catcope.data.db.SunriseSunsetDao
 import com.elliott.catcope.data.db.entity.SolarEventsEntry
 import com.elliott.catcope.data.network.RandomDogApi.RandomDogNetworkDataSource
 import com.elliott.catcope.data.network.SunriseSunsetApi.SunriseSunsetNetworkDataSource
-import com.elliott.catcope.data.network.cat_api.RandomCatNetworkDataSource
+import com.elliott.catcope.data.network.RandomCatApi.RandomCatNetworkDataSource
+import com.elliott.catcope.data.response.RandomCatResponse
 import com.elliott.catcope.data.response.RandomDogResponse
 import com.elliott.catcope.data.response.SunriseSunsetResponse
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +37,25 @@ class CatCopeRepositoryImpl internal constructor(
         }
     }
 
-    //get the current time, compare with sunrise and sunset times, return url based on comparison
-    override suspend fun getPetUrl() : LiveData<RandomDogResponse> {
-        //val currentTime = ZonedDateTime.now()
+    override suspend fun getSolarTimes(latitude: Double, longitude: Double) : LiveData<SolarEventsEntry> {
+        sunriseSunsetNetworkDataSource.fetchSolarEvents(latitude, longitude)
+        return withContext(Dispatchers.IO) {
+            return@withContext sunriseSunsetDao.getSolarEventEntry()
+        }
+    }
 
+    override suspend fun getDogUrl() : LiveData<RandomDogResponse> {
         randomDogNetworkDataSource.fetchRandomDogUrl()
-        //randomCatNetworkDataSource.fetchRandomCatUrl()
-
+        Log.e("getDogUrl", randomDogNetworkDataSource.dogUrl)
         return withContext(Dispatchers.IO) {
             return@withContext randomDogNetworkDataSource.downloadedDogUrl
+        }
+    }
+
+    override suspend fun getCatUrl() : LiveData<RandomCatResponse> {
+        randomCatNetworkDataSource.fetchRandomCatUrl()
+        return withContext(Dispatchers.IO) {
+            return@withContext randomCatNetworkDataSource.downloadedCatUrl
         }
     }
 
