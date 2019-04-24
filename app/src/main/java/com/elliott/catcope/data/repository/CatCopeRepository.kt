@@ -7,7 +7,6 @@ import com.elliott.catcope.data.response.RandomDogResponse
 import com.elliott.catcope.data.response.SunriseSunsetResponse
 
 interface CatCopeRepository {
-    suspend fun getSolarEvents() : LiveData<SolarEventsEntry>
     suspend fun getDogUrl(): LiveData<RandomDogResponse>
     suspend fun getCatUrl() : LiveData<RandomCatResponse>
     suspend fun getSolarTimes(latitude: Double, longitude: Double) : LiveData<SolarEventsEntry>

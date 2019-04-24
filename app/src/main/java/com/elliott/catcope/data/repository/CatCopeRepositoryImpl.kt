@@ -23,20 +23,6 @@ class CatCopeRepositoryImpl internal constructor(
     private val randomCatNetworkDataSource: RandomCatNetworkDataSource
 ) : CatCopeRepository {
 
-    init {
-        sunriseSunsetNetworkDataSource.downloadedSolarEvents.observeForever{ newSolarEvents ->
-            //persist the new solar events
-            persistFetchedSolarEvent(newSolarEvents)
-        }
-    }
-
-    override suspend fun getSolarEvents() : LiveData<SolarEventsEntry> {
-        initSolarEventData()
-        return withContext(Dispatchers.IO) {
-            return@withContext sunriseSunsetDao.getSolarEventEntry()
-        }
-    }
-
     override suspend fun getSolarTimes(latitude: Double, longitude: Double) : LiveData<SolarEventsEntry> {
         sunriseSunsetNetworkDataSource.fetchSolarEvents(latitude, longitude)
         return withContext(Dispatchers.IO) {
@@ -57,26 +43,5 @@ class CatCopeRepositoryImpl internal constructor(
         return withContext(Dispatchers.IO) {
             return@withContext randomCatNetworkDataSource.downloadedCatUrl
         }
-    }
-
-    private fun persistFetchedSolarEvent(fetchedSolarEvents : SunriseSunsetResponse) {
-        GlobalScope.launch(Dispatchers.IO) {
-            sunriseSunsetDao.upsert(fetchedSolarEvents.solarEventsEntry)
-        }
-    }
-
-    private suspend fun initSolarEventData() {
-        if(isFetchNeeded(ZonedDateTime.now().minusMinutes(10))) {
-            fetchCurrentSolarEvents()
-        }
-    }
-
-    private suspend fun fetchCurrentSolarEvents() {
-        sunriseSunsetNetworkDataSource.fetchSolarEvents(36.7201600, -4.4203400)
-    }
-
-    private fun isFetchNeeded(lastFetchTime: ZonedDateTime) : Boolean {
-        val refreshTime = ZonedDateTime.now().minusMinutes(5)
-        return lastFetchTime.isBefore(refreshTime)
     }
 }

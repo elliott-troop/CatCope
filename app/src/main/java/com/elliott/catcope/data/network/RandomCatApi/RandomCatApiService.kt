@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
+//Can possibly be merged into a generic pet API service call
 interface RandomCatApiService {
 
     @GET("meow")

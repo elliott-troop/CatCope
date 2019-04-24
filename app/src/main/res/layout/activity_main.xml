@@ -9,7 +9,7 @@
             android:id="@+id/pet_image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/default_pet_image"
+            android:src="@drawable/default_dog_image"
             app:layout_constraintBottom_toTopOf="@id/information_section"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription"/>

@@ -9,10 +9,6 @@ class CatCopeViewModel(
     private val catCopeRepository: CatCopeRepository
 ) : ViewModel() {
 
-    val getSolarEvent by lazyDeferred {
-        catCopeRepository.getSolarEvents()
-    }
-
     val getDogUrl by lazyDeferred {
         catCopeRepository.getDogUrl()
     }
