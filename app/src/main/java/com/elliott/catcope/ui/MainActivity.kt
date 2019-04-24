@@ -52,6 +52,8 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
 
     private var timer: Timer? = null
 
+    private var showCatPics = false
+
     //counter variable (bad practice)
     private var j: Int = 0
 
@@ -155,7 +157,6 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
     private fun bindUI() = launch {
         latitude_value.text = latitude.toString()
         longitude_value.text = longitude.toString()
-        var showCatPics = false
 
         //Latitude and Longitude
         //hit SunriseSunsetAPI from view -> viewModel -> repo -> remote data source and observe the object
@@ -188,7 +189,7 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
 
             //has double digit as hour
             //hh:mm:ss
-            if(sunriseTime.length == 8) {
+            if (sunriseTime.length == 8) {
                 sunriseHour = (sunriseTime[0] + "" + sunriseTime[1]).toInt()
                 sunriseMinutes = (sunriseTime[3] + "" + sunriseTime[4]).toInt()
                 sunriseSeconds = (sunriseTime[6] + "" + sunriseTime[7]).toInt()
@@ -199,8 +200,8 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
             }
 
             //if PM, add 12 hours
-            if(sunriseAmPm == "PM") {
-                if(sunriseHour != 12) sunriseHour += 12
+            if (sunriseAmPm == "PM") {
+                if (sunriseHour != 12) sunriseHour += 12
             }
 
             var sunriseDate = Date(currentYear, currentMonth, currentDay, sunriseHour, sunriseMinutes, sunriseSeconds)
@@ -212,7 +213,7 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
 
             //has double digit as hour
             //hh:mm:ss
-            if(sunsetTime.length == 8) {
+            if (sunsetTime.length == 8) {
                 sunsetHour = (sunsetTime[0] + "" + sunsetTime[1]).toInt()
                 sunsetMinutes = (sunsetTime[3] + "" + sunsetTime[4]).toInt()
                 sunsetSeconds = (sunsetTime[6] + "" + sunsetTime[7]).toInt()
@@ -223,8 +224,8 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
             }
 
             //if PM, add 12 hours
-            if(sunsetAmPm == "PM") {
-                if(sunsetHour != 12) sunsetHour += 12
+            if (sunsetAmPm == "PM") {
+                if (sunsetHour != 12) sunsetHour += 12
             }
 
             var sunsetDate = Date(2019, currentMonth, currentDay, sunsetHour, sunsetMinutes, sunsetSeconds)
@@ -238,18 +239,21 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
 
 
             ///if the current time is greater than or equal to the sunrise time, but before sunset, show pictures of cats
-            if((currentDateTime.compareTo(sunriseDate) > 0 || currentDateTime.compareTo(sunriseDate) == 0) && currentDateTime.compareTo(sunsetDate) < 0) {
+            if ((currentDateTime.compareTo(sunriseDate) > 0 || currentDateTime.compareTo(sunriseDate) == 0) && currentDateTime.compareTo(
+                    sunsetDate
+                ) < 0
+            ) {
                 Log.d("MainActivity", "Current date is between sunrise and sunset")
                 Toast.makeText(this@MainActivity, "SHOW PICTURES OF KITTIES", LENGTH_SHORT).show()
                 showCatPics = true
-            }
-
-            else if(currentDateTime.compareTo(sunsetDate) == 0 || currentDateTime.compareTo(sunsetDate) > 0 || currentDateTime.compareTo(sunriseDate) < 0) {
+            } else if (currentDateTime.compareTo(sunsetDate) == 0 || currentDateTime.compareTo(sunsetDate) > 0 || currentDateTime.compareTo(
+                    sunriseDate
+                ) < 0
+            ) {
                 Log.d("MainActivity", "Current date is between sunset and sunrise")
                 Toast.makeText(this@MainActivity, "SHOW PICTURES OF DOGGOS", LENGTH_SHORT).show()
             }
 
-            Log.d("MainActivity", "SHOWCATPICS IS: $showCatPics")
             sunrise_value.text = it.sunrise
             sunset_value.text = it.sunset
         })
@@ -264,19 +268,20 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
         // I alternate between the picture from the API and the default image (mod 2 check)
         //Also the boolean showCatPics if off due to timing most likely
 
-        var dogImage = viewModel.getDogUrl.await()
-        dogImage.observe(this@MainActivity, Observer {
-            if (it == null) {
-                return@Observer
-            }
+        if (!showCatPics) {
+            var dogImage = viewModel.getDogUrl.await()
+            dogImage.observe(this@MainActivity, Observer {
+                if (it == null) {
+                    return@Observer
+                }
 
-            if(!showCatPics) {
+                Log.d("MainActivity", "SHOWCATPICS IS under dogImage: $showCatPics")
 
                 if (j % 3 == 0) {
                     Glide.with(this@MainActivity)
                         .load(it.imageOfDogUrl)
                         .into(pet_image_view)
-                } else if(j % 3 == 1) {
+                } else if (j % 3 == 1) {
                     Glide.with(this@MainActivity)
                         .load(R.drawable.default_dog_image)
                         .into(pet_image_view)
@@ -285,34 +290,33 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
                         .load(R.drawable.default_dog_image_2)
                         .into(pet_image_view)
                 }
-            }
-        })
+            })
+        } else {
+            var catImage = viewModel.getCatUrl.await()
+            catImage.observe(this@MainActivity, Observer {
+                if (it == null) {
+                    return@Observer
+                }
 
-        var catImage = viewModel.getCatUrl.await()
-        catImage.observe(this@MainActivity, Observer {
-            if (it == null) {
-                return@Observer
-            }
+                Log.d("MainActivity", "SHOWCATPICS IS under catImage: $showCatPics")
 
-            if(showCatPics) {
                 Log.e("MainActivity", "Cat URL: " + it.imageOfCatUrl)
-                if(j % 3 == 0) {
+                if (j % 3 == 0) {
                     Glide.with(this@MainActivity)
                         .load(it.imageOfCatUrl)
                         .into(pet_image_view)
-                }
-                else if (j % 3 == 1){
+                } else if (j % 3 == 1) {
                     Glide.with(this@MainActivity)
                         .load(R.drawable.default_cat_image)
                         .into(pet_image_view)
-                }
-                else {
+                } else {
                     Glide.with(this@MainActivity)
                         .load(R.drawable.default_cat_image_2)
                         .into(pet_image_view)
                 }
-            }
-        })
+            })
+        }
+
     }
 
     private fun hasLocationPermission(): Boolean {
