@@ -15,8 +15,11 @@ import com.elliott.catcope.data.response.RandomDogResponse
 abstract class SunriseSunsetDatabase : RoomDatabase() {
     abstract fun currentSunriseSunsetDao() : SunriseSunsetDao
 
+    //the database needs to be a singleton since there should only be one instance of the database
     companion object {
+        //Volatile so all threads can have immediate access to this property
         @Volatile private var instance: SunriseSunsetDatabase? = null
+        //dummy object so that no two threads are doing the same thing
         private val LOCK = Any()
 
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {

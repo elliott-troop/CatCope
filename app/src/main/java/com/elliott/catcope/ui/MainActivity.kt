@@ -22,6 +22,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -154,7 +155,7 @@ class MainActivity : ScopedActivity(), KodeinAware, SeekBar.OnSeekBarChangeListe
         }
     }
 
-    private fun bindUI() = launch {
+    private fun bindUI() = launch(Dispatchers.Main) {
         latitude_value.text = latitude.toString()
         longitude_value.text = longitude.toString()
 

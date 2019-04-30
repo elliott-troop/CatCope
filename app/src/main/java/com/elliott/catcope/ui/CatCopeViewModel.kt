@@ -18,4 +18,6 @@ class CatCopeViewModel(
     }
 
     suspend fun getSolarTimes(latitude: Double, longitude: Double) = catCopeRepository.getSolarTimes(latitude, longitude)
+    /*suspend fun getDogUrl() = catCopeRepository.getDogUrl()
+    suspend fun getCatUrl() = catCopeRepository.getCatUrl()*/
 }

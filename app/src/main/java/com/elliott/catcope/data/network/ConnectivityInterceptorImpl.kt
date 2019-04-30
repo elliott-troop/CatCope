@@ -15,6 +15,7 @@ class ConnectivityInterceptorImpl(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if(!isOnline())
+            //custom exception
             throw NoConnectivityException()
         return chain.proceed(chain.request())
     }

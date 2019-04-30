@@ -59,7 +59,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-    // Kodein
+    // Kodein: KOtlin DEpendency INjection
     implementation "org.kodein.di:kodein-di-generic-jvm:$kodein_version"
     implementation "org.kodein.di:kodein-di-framework-android-x:$kodein_version"
 

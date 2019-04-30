@@ -28,7 +28,12 @@ import org.kodein.di.generic.singleton
 
 class CatCopeApplication : Application(), KodeinAware {
     override val kodein = Kodein.lazy {
+        //provides instances of context, services, and anything related to Android
         import(androidXModule(this@CatCopeApplication))
+
+        //A Singleton is a software design pattern that guarantees a class has one instance only
+        //and a global point of access to it is provided by that class to ensure thread safety
+
 
         bind() from singleton { SunriseSunsetDatabase(instance()) }
         bind() from singleton { instance<SunriseSunsetDatabase>().currentSunriseSunsetDao() }

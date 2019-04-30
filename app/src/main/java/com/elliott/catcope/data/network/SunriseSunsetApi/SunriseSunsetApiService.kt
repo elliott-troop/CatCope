@@ -14,12 +14,16 @@ import retrofit2.http.Query
 
 interface SunriseSunsetApiService {
 
+    //GET Request
+    //Returns a Deferred SunriseSunsetResponse
     @GET("json")
     fun getSolarEventTimes(
+        //Query parameters
         @Query("lat") latitude: Double,
         @Query("lng") longitude: Double
     ): Deferred<SunriseSunsetResponse>
 
+    //static method
     companion object {
         operator fun invoke(
             connectivityInterceptor: ConnectivityInterceptor
@@ -28,6 +32,8 @@ interface SunriseSunsetApiService {
                 .addInterceptor(connectivityInterceptor)
                 .build()
 
+            //CallAdapterFactory is used because Deferred is being returned from the getSolarEventTimes
+            //Tell Retrofit to use Gson to parse JSON into Kotlin object
             return Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl("https://api.sunrise-sunset.org/")

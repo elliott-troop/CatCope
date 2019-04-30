@@ -9,17 +9,19 @@ import com.elliott.catcope.internal.NoConnectivityException
 class SunriseSunsetNetworkDataSourceImpl(private val sunriseSunsetApiService: SunriseSunsetApiService)
     : SunriseSunsetNetworkDataSource {
 
+    //MutableLiveData can be changed, while LiveData cannot
     private val _downloadedSolarEvents = MutableLiveData<SunriseSunsetResponse>()
 
     override val downloadedSolarEvents: LiveData<SunriseSunsetResponse>
+        //casts MutableLiveData to LiveData
         get() = _downloadedSolarEvents
 
     override suspend fun fetchSolarEvents(latitude: Double, longitude: Double) {
         try {
-            val fetchSolarEvents = sunriseSunsetApiService
+            val fetchedSolarEvents = sunriseSunsetApiService
                 .getSolarEventTimes(latitude, longitude)
                 .await()
-            _downloadedSolarEvents.postValue(fetchSolarEvents)
+            _downloadedSolarEvents.postValue(fetchedSolarEvents)
         } catch (e: NoConnectivityException) {
             Log.e("Connectivity", "No internet connection", e)
         }

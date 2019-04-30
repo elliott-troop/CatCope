@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 
+//Repository  is a class that puts the network and local data operations into a centralized place
 class CatCopeRepositoryImpl internal constructor(
     private val sunriseSunsetNetworkDataSource: SunriseSunsetNetworkDataSource,
     private val sunriseSunsetDao: SunriseSunsetDao,
@@ -23,9 +24,17 @@ class CatCopeRepositoryImpl internal constructor(
     private val randomCatNetworkDataSource: RandomCatNetworkDataSource
 ) : CatCopeRepository {
 
+    /*init {
+        sunriseSunsetNetworkDataSource.downloadedSolarEvents.observeForever {
+            persistFetchedSolarEvents(it)
+        }
+    }*/
+
     override suspend fun getSolarTimes(latitude: Double, longitude: Double) : LiveData<SolarEventsEntry> {
         sunriseSunsetNetworkDataSource.fetchSolarEvents(latitude, longitude)
+        //withContext returns a value
         return withContext(Dispatchers.IO) {
+            //need to utilize the upsert function in the DAO to update the value of the solar events
             return@withContext sunriseSunsetDao.getSolarEventEntry()
         }
     }
@@ -33,6 +42,8 @@ class CatCopeRepositoryImpl internal constructor(
     override suspend fun getDogUrl() : LiveData<RandomDogResponse> {
         randomDogNetworkDataSource.fetchRandomDogUrl()
         Log.e("getDogUrl", randomDogNetworkDataSource.dogUrl)
+
+        //withContext returns a value
         return withContext(Dispatchers.IO) {
             return@withContext randomDogNetworkDataSource.downloadedDogUrl
         }
@@ -40,8 +51,21 @@ class CatCopeRepositoryImpl internal constructor(
 
     override suspend fun getCatUrl() : LiveData<RandomCatResponse> {
         randomCatNetworkDataSource.fetchRandomCatUrl()
+
+        //withContext returns a value
         return withContext(Dispatchers.IO) {
             return@withContext randomCatNetworkDataSource.downloadedCatUrl
         }
     }
+
+    /*private suspend fun initSolarEventData() {
+
+    }
+
+    private fun persistFetchedSolarEvents(fetchedSolarEvents: SunriseSunsetResponse) {
+        //launch returns a job
+        GlobalScope.launch(Dispatchers.IO) {
+            sunriseSunsetDao.upsert(fetchedSolarEvents.solarEventsEntry)
+        }
+    }*/
 }
